@@ -1,0 +1,12 @@
+#include "resource.h"
+
+// Explorer shows the lowest-numbered icon resource for the .exe itself, and a
+// shortcut that names no icon of its own inherits that - which is how the
+// Start Menu entry created by FirstRunSetup ends up with this icon for free.
+IDI_APPICON ICON "CecTray.ico"
+
+// Task Manager shows the description as the process name, so it is the
+// product's name rather than a description of the file.
+#define CEC_FILE_DESCRIPTION "HDMI-CEC Display Control"
+#define CEC_FILE_NAME        "CecTray.exe"
+#include "../CecTest/VersionInfo.rc2"

@@ -1,0 +1,30 @@
+# Visual Studio / MSBuild output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+.vs/
+
+# Build intermediates
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.log
+*.tlog
+*.idb
+*.recipe
+*.lastbuildstate
+*.user
+
+# Captures and logs kept outside the repo
+*.sr
+service.log
+
+# Test builds
+tests/build/
+
+# The NVAPI SDK, cloned here by whoever builds (see README)
+third_party/

@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CecTest/CecTest.vcxproj" />
+  <Project Path="CecService/CecService.vcxproj" />
+  <Project Path="CecTray/CecTray.vcxproj" />
+</Solution>

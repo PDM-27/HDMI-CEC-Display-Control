@@ -1,0 +1,7 @@
+// Version information only. The service has no icon or other resources: it
+// runs in Session 0 where nobody sees it, and Services lists it by its display
+// name. Forward slashes for the same reason as CecSetup.rc - the resource
+// compiler applies C escape rules to paths.
+#define CEC_FILE_DESCRIPTION "HDMI-CEC Display Control service"
+#define CEC_FILE_NAME        "CecService.exe"
+#include "../CecTest/VersionInfo.rc2"

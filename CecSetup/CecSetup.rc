@@ -1,0 +1,22 @@
+#include "resource.h"
+
+// Forward slashes on purpose. The resource compiler applies C escape rules to
+// these paths, so a backslash before x64 reads as the hex escape \x64 - the
+// letter 'd' - and the path silently becomes CecServiced\Release. Forward
+// slashes have no escape meaning and work everywhere a backslash would.
+IDI_SETUP ICON "../CecTray/CecTray.ico"
+
+// Both programs travel inside this executable, which is what makes the single
+// file self-sufficient - and what lets the copy left behind as Uninstall.exe
+// offer Repair without needing the original download.
+//
+// Release builds on purpose: these paths are why build-installer.ps1 builds
+// the other two projects first.
+IDR_SERVICE_EXE RCDATA "../CecService/x64/Release/CecService.exe"
+IDR_TRAY_EXE    RCDATA "../CecTray/x64/Release/CecTray.exe"
+
+// The copy left behind as Uninstall.exe carries the same block, which is
+// correct: it is the same program under another name.
+#define CEC_FILE_DESCRIPTION "HDMI-CEC Display Control Setup"
+#define CEC_FILE_NAME        "CecSetup.exe"
+#include "../CecTest/VersionInfo.rc2"

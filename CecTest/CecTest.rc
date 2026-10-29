@@ -1,0 +1,5 @@
+// Version information only, so a copy of the bench tool found next to an
+// installed service can be matched to the build it came from.
+#define CEC_FILE_DESCRIPTION "HDMI-CEC Display Control bench tool"
+#define CEC_FILE_NAME        "CecTest.exe"
+#include "VersionInfo.rc2"

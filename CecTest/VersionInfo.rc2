@@ -1,0 +1,44 @@
+// VersionInfo.rc2 - the VERSIONINFO block every executable shares.
+//
+// Included from each project's .rc once that file has defined
+// CEC_FILE_DESCRIPTION and CEC_FILE_NAME. This is what Explorer shows under
+// Properties > Details, what Task Manager shows as the description, what
+// Installed Apps and support questions lean on, and what code signing will
+// stamp. Without it each exe is a bare file with no name and no version, and
+// "which build is this?" has no answer on someone else's machine.
+//
+// The numbers and names come from Version.h, so nothing here needs editing
+// for a new release.
+
+#include <winres.h>
+#include "Version.h"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION    CEC_VERSION_MAJOR,CEC_VERSION_MINOR,CEC_VERSION_PATCH,0
+ PRODUCTVERSION CEC_VERSION_MAJOR,CEC_VERSION_MINOR,CEC_VERSION_PATCH,0
+ FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+ FILEFLAGS      0
+ FILEOS         VOS_NT_WINDOWS32
+ FILETYPE       VFT_APP
+ FILESUBTYPE    VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        // US English, Unicode - matching the Translation entry below.
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName",      CEC_PUBLISHER
+            VALUE "FileDescription",  CEC_FILE_DESCRIPTION
+            VALUE "FileVersion",      CEC_VERSION_STRING
+            VALUE "InternalName",     CEC_FILE_NAME
+            VALUE "LegalCopyright",   CEC_COPYRIGHT
+            VALUE "OriginalFilename", CEC_FILE_NAME
+            VALUE "ProductName",      CEC_PRODUCT_NAME
+            VALUE "ProductVersion",   CEC_VERSION_STRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
