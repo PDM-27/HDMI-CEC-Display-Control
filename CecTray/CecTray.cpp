@@ -2671,10 +2671,16 @@ void StopWatchingForInput() {
 }
 
 void CheckForInput() {
+    // Recent, which takes in the touch that lit the screen a moment before the
+    // watch began, or any time since it began. Recent alone missed input once
+    // the checks slowed to every five seconds: a key pressed more than a second
+    // and a half before a check was never seen, so a person who touched the
+    // keyboard once and waited for the television waited in vain.
     LASTINPUTINFO input = {sizeof(input)};
     const DWORD watched = GetTickCount() - g_inputWatchStarted;
     if (GetLastInputInfo(&input) &&
-        GetTickCount() - input.dwTime < kInputIsRecentMs) {
+        (GetTickCount() - input.dwTime < kInputIsRecentMs ||
+         static_cast<LONG>(input.dwTime - g_inputWatchStarted) >= 0)) {
         g_commands.Post("CMD user-active");
         StopWatchingForInput();
         return;

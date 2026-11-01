@@ -12,7 +12,7 @@
 
 #define CEC_VERSION_MAJOR 1
 #define CEC_VERSION_MINOR 0
-#define CEC_VERSION_PATCH 0
+#define CEC_VERSION_PATCH 1
 
 #define CEC_PRODUCT_NAME "HDMI-CEC Display Control"
 #define CEC_PUBLISHER    "PDM-27"

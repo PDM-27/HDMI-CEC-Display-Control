@@ -4684,6 +4684,17 @@ std::atomic<bool> g_powerDownInProgress{false};
 // and the television is turned on for them. See the resume handler.
 std::atomic<bool> g_wakePending{false};
 
+// Windows' word that a person woke the machine, kept when it arrives before the
+// resume notice it is documented to follow. It was dropped in that case, and a
+// television stayed off: on 2026-10-30 at 10:33, a power button wake that
+// Windows treated as attended (it kept the machine up for its full fifteen
+// minute idle timeout, where an unattended wake sleeps again after two), and
+// on 2026-11-01 at 13:12, a keyboard wake, where the television came on only
+// when the remote was picked up and the mouse moved a minute later. The same
+// wake source turned the set on at once two hours earlier, so it was not
+// Windows deciding nobody was there.
+std::atomic<bool> g_userResumeEarly{false};
+
 // Guards against acting on shutdown twice. Windows normally sends PRESHUTDOWN
 // *instead of* SHUTDOWN, but both are handled in case a future Windows, or a
 // failure to register PRESHUTDOWN, delivers only the latter. Sending <Standby>
@@ -5562,6 +5573,7 @@ DWORD WINAPI HandlerEx(DWORD control, DWORD eventType, LPVOID eventData,
                     // before the sleep.
                     g_displayState = 0;
                     g_wakePending = false;
+                    g_userResumeEarly = false;
                     // Anything the display thread had queued is stale from
                     // here: this path owns the television now, and a screen
                     // that went off on the way down is not news worth acting
@@ -5610,9 +5622,16 @@ DWORD WINAPI HandlerEx(DWORD control, DWORD eventType, LPVOID eventData,
                 // exactly the question the television's power turns on. It
                 // arrives after RESUMEAUTOMATIC, which is sent for every wake
                 // including the ones the machine arranges for itself.
+                // Logged because without it a wake that left the television
+                // off could not say whether Windows ever spoke.
                 case PBT_APMRESUMESUSPEND:
-                    if (g_wakePending.load() && g_userWakeEvent) {
-                        SetEvent(g_userWakeEvent);
+                    if (g_wakePending.load()) {
+                        Log("power event: a person woke this PC");
+                        if (g_userWakeEvent) SetEvent(g_userWakeEvent);
+                    } else {
+                        Log("power event: a person woke this PC (ahead of the "
+                            "resume notice)");
+                        g_userResumeEarly = true;
                     }
                     break;
 
@@ -5659,6 +5678,11 @@ DWORD WINAPI HandlerEx(DWORD control, DWORD eventType, LPVOID eventData,
                     // that came from user activity, or the tray seeing input.
                     // Both arrive on their own.
                     if (g_displayEvent) ResetEvent(g_displayEvent);
+                    // Unless Windows has already said a person did this, ahead
+                    // of the notice it is meant to follow.
+                    if (g_userResumeEarly.exchange(false) && g_userWakeEvent) {
+                        SetEvent(g_userWakeEvent);
+                    }
                     break;
 
                 // Windows blanking or restoring the picture while the machine
